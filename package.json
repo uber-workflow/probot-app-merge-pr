@@ -1,6 +1,6 @@
 {
   "name": "probot-app-merge-pr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitHub App that merges PRs on command",
   "author": "Ryan Tsao <ryan.j.tsao@gmail.com>",
   "contributors": [],
