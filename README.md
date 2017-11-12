@@ -26,8 +26,8 @@ command: "!merge"
 merge_method: squash
 ```
 
-[build-badge]: https://travis-ci.org/uber-web/probot-app-merge-pr.svg?branch=master
-[build-href]: https://travis-ci.org/uber-web/probot-app-merge-pr
+[build-badge]: https://badge.buildkite.com/12755c41f29821b7e31405d1e61f6b2fe982a742743e1cc647.svg?branch=master
+[build-href]: https://buildkite.com/uberopensource/probot-app-merge-pr
 [deps-badge]: https://david-dm.org/uber-web/probot-app-merge-pr.svg
 [deps-href]: https://david-dm.org/uber-web/probot-app-merge-pr
 [npm-badge]: https://badge.fury.io/js/probot-app-merge-pr.svg
