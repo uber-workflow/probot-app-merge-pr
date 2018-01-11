@@ -1,17 +1,23 @@
 steps:
-  - name: ":docker: :package:"
+  - name: ':docker: :package:'
     plugins:
-      docker-compose#v1.5.2:
+      'docker-compose#v1.5.2':
         build: probot-app-merge-pr
-        image-repository: 296822479253.dkr.ecr.us-east-2.amazonaws.com/fusionjs
+        image-repository: 027047743804.dkr.ecr.us-east-2.amazonaws.com/uber
+    agents:
+      queue: builders
   - wait
-  - name: ":eslint:"
-    command: "npm run lint"
+  - name: ':eslint:'
+    command: npm run lint
     plugins:
-      docker-compose#v1.5.2:
+      'docker-compose#v1.5.2':
         run: probot-app-merge-pr
-  - name: ":jest:"
-    command: "npm run jest"
+    agents:
+      queue: workers
+  - name: ':jest:'
+    command: npm run jest
     plugins:
-      docker-compose#v1.5.2:
+      'docker-compose#v1.5.2':
         run: probot-app-merge-pr
+    agents:
+      queue: workers
