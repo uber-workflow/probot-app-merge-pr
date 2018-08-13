@@ -20,7 +20,7 @@
     "eslint-plugin-prettier": "2.6.2",
     "jest": "23.5.0",
     "localtunnel": "1.9.0",
-    "prettier": "1.13.7"
+    "prettier": "1.14.2"
   },
   "jest": {
     "testURL": "http://localhost:3000/"
