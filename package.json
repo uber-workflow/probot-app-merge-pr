@@ -16,7 +16,7 @@
     "probot": "7.0.1"
   },
   "devDependencies": {
-    "eslint": "5.8.0",
+    "eslint": "5.10.0",
     "eslint-plugin-prettier": "2.6.2",
     "jest": "23.6.0",
     "localtunnel": "1.9.1",
