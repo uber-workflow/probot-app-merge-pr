@@ -5,7 +5,6 @@
  */
 
 /* eslint-env jest */
-global.TESTING = true;
 
 const nock = require('nock');
 const mergePRApp = require('../index.js');
@@ -29,31 +28,33 @@ describe('probot-app-merge-pr', () => {
     app.app = () => 'test';
   });
 
-  test('merges the PR with commit authors as co-authors', async () => {
-    expect.assertions(1);
+  function makeMergeRequest() {
+    return new Promise(resolve => {
+      nock('https://api.github.com')
+        .get('/repos/fusionjs/test-repo/collaborators/test-user/permission')
+        .reply(200, fixtures.reviewUserPermissionLevel)
+        .get('/repos/fusionjs/test-repo/contents/.github/merge-pr.yml')
+        .reply(404)
+        .get('/repos/fusionjs/test-repo/pulls/1/commits')
+        .reply(200, fixtures.listCommits)
+        .put('/repos/fusionjs/test-repo/pulls/1/merge', resolve)
+        .reply(200);
+    });
+  }
 
-    nock('https://api.github.com')
-      .get('/repos/fusionjs/test-repo/collaborators/test-user/permission')
-      .reply(200, fixtures.reviewUserPermissionLevel)
-      .get('/repos/fusionjs/test-repo/contents/.github/merge-pr.yml')
-      .reply(404)
-      .get('/repos/fusionjs/test-repo/pulls/1/commits')
-      .reply(200, fixtures.listCommits)
-      .put('/repos/fusionjs/test-repo/pulls/1/merge', body => {
-        const expectedMessage = `https://github.com/fusionjs/test-repo/pull/1
+  test('merges the PR with commit authors as co-authors', async () => {
+    const expectedMessage = `https://github.com/fusionjs/test-repo/pull/1
 
 Co-authored-by: test-user2 <test-user2@uber.com>
 Co-authored-by: test-user3 <test-user3@uber.com>`;
 
-        expect(body).toEqual({
-          commit_title: 'Test PR',
-          commit_message: expectedMessage,
-          merge_method: 'squash',
-        });
-        return true;
-      })
-      .reply(200);
+    const awaitMergeRequestPromise = makeMergeRequest();
 
     await probot.receive({name: 'issue_comment', payload: fixtures.payload});
+    expect(await awaitMergeRequestPromise).toEqual({
+      commit_title: 'Test PR',
+      commit_message: expectedMessage,
+      merge_method: 'squash',
+    });
   });
 });

@@ -89,13 +89,6 @@ module.exports = robot => {
           }),
         );
       }
-
-      // not proud of this, but only way to ensure failing assertions
-      // throw, while also allowing this to not exit the process in
-      // production
-      if (global.TESTING) {
-        throw err;
-      }
     }
   }
 };
