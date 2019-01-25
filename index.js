@@ -81,18 +81,20 @@ module.exports = robot => {
         }),
       );
     } catch (err) {
-      // not proud of this, but only way to ensure failing assertions
-      // throw, while also allowing this to not exit the process in
-      // production
-      if (global.TESTING) {
-        throw err;
-      } else if (err.code === 405) {
+      if (err.code === 405) {
         const message = JSON.parse(err.message).message;
         github.issues.createComment(
           context.issue({
             body: `Failed to merge PR: ${message}`,
           }),
         );
+      }
+
+      // not proud of this, but only way to ensure failing assertions
+      // throw, while also allowing this to not exit the process in
+      // production
+      if (global.TESTING) {
+        throw err;
       }
     }
   }
