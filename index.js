@@ -81,7 +81,12 @@ module.exports = robot => {
         }),
       );
     } catch (err) {
-      if (err.code === 405) {
+      // not proud of this, but only way to ensure failing assertions
+      // throw, while also allowing this to not exit the process in
+      // production
+      if (global.TESTING) {
+        throw err;
+      } else if (err.code === 405) {
         const message = JSON.parse(err.message).message;
         github.issues.createComment(
           context.issue({
