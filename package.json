@@ -30,7 +30,8 @@
     "testURL": "http://localhost:3000/"
   },
   "engines": {
-    "node": ">= 8.6.0"
+    "node": ">= 8.6.0",
+    "yarn": ">=1.12"
   },
   "license": "MIT"
 }
