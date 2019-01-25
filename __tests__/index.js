@@ -29,14 +29,16 @@ describe('probot-app-merge-pr', () => {
   });
 
   test('merges the PR with commit authors as co-authors', async () => {
+    nock('https://api.github.com')
+      .get('/repos/fusionjs/test-repo/collaborators/test-user/permission')
+      .reply(200, fixtures.reviewUserPermissionLevel)
+      .get('/repos/fusionjs/test-repo/contents/.github/merge-pr.yml')
+      .reply(404)
+      .get('/repos/fusionjs/test-repo/pulls/1/commits')
+      .reply(200, fixtures.listCommits);
+
     const mergeRequest = new Promise(resolve => {
       nock('https://api.github.com')
-        .get('/repos/fusionjs/test-repo/collaborators/test-user/permission')
-        .reply(200, fixtures.reviewUserPermissionLevel)
-        .get('/repos/fusionjs/test-repo/contents/.github/merge-pr.yml')
-        .reply(404)
-        .get('/repos/fusionjs/test-repo/pulls/1/commits')
-        .reply(200, fixtures.listCommits)
         .put('/repos/fusionjs/test-repo/pulls/1/merge', resolve)
         .reply(200);
     });
