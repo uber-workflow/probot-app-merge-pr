@@ -20,13 +20,18 @@
     "eslint-plugin-prettier": "2.6.2",
     "jest": "23.6.0",
     "localtunnel": "1.9.1",
+    "nock": "^10.0.6",
     "prettier": "1.15.3"
   },
   "jest": {
+    "testPathIgnorePatterns": [
+      "__fixtures__"
+    ],
     "testURL": "http://localhost:3000/"
   },
   "engines": {
-    "node": ">= 8.6.0"
+    "node": ">= 8.6.0",
+    "yarn": ">=1.12"
   },
   "license": "MIT"
 }

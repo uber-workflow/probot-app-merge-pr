@@ -1,4 +1,4 @@
-/** Copyright (c) 2017 Uber Technologies, Inc.
+/** Copyright (c) 2019 Uber Technologies, Inc.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -38,11 +38,45 @@ module.exports = robot => {
     }
 
     try {
+      let commit_message = issue.html_url;
+
+      // add all PR commiters as co-authors
+      // https://help.github.com/articles/creating-a-commit-with-multiple-authors/
+      if (merge_method === 'squash') {
+        const prNumber = pull_request.url.split('/').slice(-1)[0];
+        const commitList = await github.pullRequests.listCommits(
+          context.repo({
+            number: prNumber,
+          }),
+        );
+        const authorTrailers = commitList.data.reduce((result, item) => {
+          const {
+            commit: {
+              author: {email, name},
+            },
+          } = item;
+
+          if (name !== user.login) {
+            const trailer = `Co-authored-by: ${name} <${email}>`;
+
+            if (!result.includes(trailer)) {
+              result.push(trailer);
+            }
+          }
+
+          return result;
+        }, []);
+
+        if (authorTrailers.length) {
+          commit_message += '\n\n' + authorTrailers.join('\n');
+        }
+      }
+
       await github.pullRequests.merge(
         context.repo({
           number: issue.number,
           commit_title: issue.title,
-          commit_message: issue.html_url,
+          commit_message,
           merge_method,
         }),
       );
