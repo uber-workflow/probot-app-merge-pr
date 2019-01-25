@@ -28,7 +28,7 @@ describe('probot-app-merge-pr', () => {
     app.app = () => 'test';
   });
 
-  function makeMergeRequest() {
+  function mockMergeRequest() {
     return new Promise(resolve => {
       nock('https://api.github.com')
         .get('/repos/fusionjs/test-repo/collaborators/test-user/permission')
@@ -48,7 +48,7 @@ describe('probot-app-merge-pr', () => {
 Co-authored-by: test-user2 <test-user2@uber.com>
 Co-authored-by: test-user3 <test-user3@uber.com>`;
 
-    const awaitMergeRequestPromise = makeMergeRequest();
+    const awaitMergeRequestPromise = mockMergeRequest();
 
     await probot.receive({name: 'issue_comment', payload: fixtures.payload});
     expect(await awaitMergeRequestPromise).toEqual({
