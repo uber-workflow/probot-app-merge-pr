@@ -45,8 +45,8 @@ describe('probot-app-merge-pr', () => {
 
     const expectedMessage = `https://github.com/fusionjs/test-repo/pull/1
 
-Co-authored-by: test-user2 <test-user2@uber.com>
-Co-authored-by: test-user3 <test-user3@uber.com>`;
+Co-authored-by: Test User2 <test-user2@uber.com>
+Co-authored-by: Test User3 <test-user3@uber.com>`;
 
     await probot.receive({name: 'issue_comment', payload: fixtures.payload});
     expect(await mergeRequest).toEqual({

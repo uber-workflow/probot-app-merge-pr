@@ -3,25 +3,34 @@ module.exports = [
   {
     commit: {
       author: {
-        name: 'test-user',
+        name: 'Test User',
         email: 'test-user@uber.com',
       },
     },
-  },
-  {
-    commit: {
-      author: {
-        name: 'test-user2',
-        email: 'test-user2@uber.com',
-      },
+    author: {
+      login: 'test-user',
     },
   },
   {
     commit: {
       author: {
-        name: 'test-user3',
+        name: 'Test User2',
+        email: 'test-user2@uber.com',
+      },
+    },
+    author: {
+      login: 'test-user2',
+    },
+  },
+  {
+    commit: {
+      author: {
+        name: 'Test User3',
         email: 'test-user3@uber.com',
       },
+    },
+    author: {
+      login: 'test-user3',
     },
   },
 ];
