@@ -43,32 +43,26 @@ module.exports = robot => {
       // add all PR commiters as co-authors
       // https://help.github.com/articles/creating-a-commit-with-multiple-authors/
       if (merge_method === 'squash') {
-        const prNumber = pull_request.url.split('/').slice(-1)[0];
-        const commitList = await github.pullRequests.listCommits(
-          context.repo({
-            number: prNumber,
-          }),
-        );
-        const authorTrailers = commitList.data.reduce((result, item) => {
-          const {
-            commit: {
-              author: {email, name},
-            },
-          } = item;
+        const authorTrailerSet = await github.pullRequests
+          .listCommits(
+            context.repo({
+              number: issue.number,
+            }),
+          )
+          .then(res =>
+            res.data.reduce((result, item) => {
+              // exclude PR author from list
+              if (item.author.login !== user.login) {
+                const {email, name} = item.commit.author;
+                result.add(`Co-authored-by: ${name} <${email}>`);
+              }
 
-          if (name !== user.login) {
-            const trailer = `Co-authored-by: ${name} <${email}>`;
+              return result;
+            }, new Set()),
+          );
 
-            if (!result.includes(trailer)) {
-              result.push(trailer);
-            }
-          }
-
-          return result;
-        }, []);
-
-        if (authorTrailers.length) {
-          commit_message += '\n\n' + authorTrailers.join('\n');
+        if (authorTrailerSet.size) {
+          commit_message += '\n\n' + [...authorTrailerSet].join('\n');
         }
       }
 
