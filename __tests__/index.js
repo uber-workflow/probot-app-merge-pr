@@ -6,9 +6,16 @@
 
 /* eslint-env jest */
 
+const fs = require('fs');
+const path = require('path');
 const nock = require('nock');
 const mergePRApp = require('../index.js');
 const {Probot} = require('probot');
+
+const MOCK_CERT_PATH = path.resolve(__dirname, '__fixtures__/mock-cert.pem');
+// mock cert copied from copied from:
+// https://github.com/probot/create-probot-app/blob/de9078d/templates/basic-js/test/fixtures/mock-cert.pem
+const MOCK_CERT = fs.readFileSync(MOCK_CERT_PATH, 'utf-8');
 const fixtures = {
   listCommits: require('./__fixtures__/listCommits.js'),
   payload: require('./__fixtures__/issue_comment.created.js'),
@@ -21,11 +28,12 @@ describe('probot-app-merge-pr', () => {
   let probot;
 
   beforeEach(() => {
-    probot = new Probot({});
-    const app = probot.load(mergePRApp);
+    probot = new Probot({
+      id: 123,
+      cert: MOCK_CERT,
+    });
 
-    // just return a test token
-    app.app = () => 'test';
+    probot.load(mergePRApp);
   });
 
   test('merges the PR with commit authors as co-authors', async () => {
@@ -39,7 +47,10 @@ describe('probot-app-merge-pr', () => {
 
     const mergeRequest = new Promise(resolve => {
       nock('https://api.github.com')
-        .put('/repos/fusionjs/test-repo/pulls/1/merge', resolve)
+        .put('/repos/fusionjs/test-repo/pulls/1/merge', body => {
+          resolve(body);
+          return true;
+        })
         .reply(200);
     });
 
