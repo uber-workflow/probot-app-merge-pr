@@ -17,7 +17,7 @@ module.exports = robot => {
     }
 
     const {github} = context;
-    const permissions = await github.repos.reviewUserPermissionLevel(
+    const permissions = await github.repos.getCollaboratorPermissionLevel(
       context.repo({
         username: user.login,
       }),
@@ -46,7 +46,7 @@ module.exports = robot => {
         const authorTrailerSet = await github.pullRequests
           .listCommits(
             context.repo({
-              number: issue.number,
+              pull_number: issue.number,
             }),
           )
           .then(res =>
@@ -68,7 +68,7 @@ module.exports = robot => {
 
       await github.pullRequests.merge(
         context.repo({
-          number: issue.number,
+          pull_number: issue.number,
           commit_title: issue.title,
           commit_message,
           merge_method,
