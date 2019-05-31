@@ -38,7 +38,7 @@ module.exports = robot => {
     }
 
     try {
-      let commit_message = issue.html_url;
+      let commit_message = '';
 
       // add all PR commiters as co-authors
       // https://help.github.com/articles/creating-a-commit-with-multiple-authors/
@@ -69,7 +69,7 @@ module.exports = robot => {
       await github.pullRequests.merge(
         context.repo({
           pull_number: issue.number,
-          commit_title: issue.title,
+          commit_title: `${issue.title} (${issue.html_url})`,
           commit_message,
           merge_method,
         }),
