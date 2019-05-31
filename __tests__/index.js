@@ -54,14 +54,14 @@ describe('probot-app-merge-pr', () => {
         .reply(200);
     });
 
-    const expectedMessage = `
+    const expectedMessage = `https://github.com/fusionjs/test-repo/pull/1
 
 Co-authored-by: Test User2 <test-user2@uber.com>
 Co-authored-by: Test User3 <test-user3@uber.com>`;
 
     await probot.receive({name: 'issue_comment', payload: fixtures.payload});
     expect(await mergeRequest).toEqual({
-      commit_title: 'Test PR (https://github.com/fusionjs/test-repo/pull/1)',
+      commit_title: 'Test PR (#1)',
       commit_message: expectedMessage,
       merge_method: 'squash',
     });
