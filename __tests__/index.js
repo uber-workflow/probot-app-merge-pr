@@ -61,7 +61,7 @@ Co-authored-by: Test User3 <test-user3@uber.com>`;
 
     await probot.receive({name: 'issue_comment', payload: fixtures.payload});
     expect(await mergeRequest).toEqual({
-      commit_title: 'Test PR',
+      commit_title: 'Test PR (#1)',
       commit_message: expectedMessage,
       merge_method: 'squash',
     });

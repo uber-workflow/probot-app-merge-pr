@@ -69,7 +69,7 @@ module.exports = robot => {
       await github.pullRequests.merge(
         context.repo({
           pull_number: issue.number,
-          commit_title: issue.title,
+          commit_title: `${issue.title} (#${issue.number})`,
           commit_message,
           merge_method,
         }),
